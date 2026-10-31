@@ -1,1 +1,6 @@
-Dan link GitHub/GitLab cua nhom vao day.
+DO AN CLOUD COMPUTING - NHOM 5
+
+Ten de tai: He thong quan ly phong tro NhaTro Manager
+
+GitHub:
+https://github.com/nguyengu096206-sys/NhaTro-Manager-CloudComputing
