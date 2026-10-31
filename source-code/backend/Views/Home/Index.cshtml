@@ -1,0 +1,32 @@
+@model DashboardVm
+@{ ViewData["Title"] = "Tổng quan"; }
+<section class="welcome-row">
+    <div><div class="eyebrow">DASHBOARD / OVERVIEW</div><h1>Xin chào, @User.Identity?.Name 👋</h1><p class="page-subtitle">Đây là tình hình hoạt động của khu nhà trọ hôm nay.</p></div>
+    <a class="btn btn-primary primary-action" href="/HoaDon">Quản lý hóa đơn <span aria-hidden="true">→</span></a>
+</section>
+<section class="stats-grid">
+    <article class="stat-card"><div class="stat-top"><span>Tổng số phòng</span><span class="stat-icon icon-blue">▦</span></div><div class="stat-value">@Model.TongPhong</div><div class="stat-foot">Toàn bộ phòng trong hệ thống</div></article>
+    <article class="stat-card"><div class="stat-top"><span>Đang có khách thuê</span><span class="stat-icon icon-green">✓</span></div><div class="stat-value">@Model.DangThue</div><div class="stat-foot">Phòng đang được sử dụng</div></article>
+    <article class="stat-card"><div class="stat-top"><span>Phòng còn trống</span><span class="stat-icon icon-violet">⌂</span></div><div class="stat-value">@Model.Trong</div><div class="stat-foot">Sẵn sàng đón khách thuê</div></article>
+    <article class="stat-card"><div class="stat-top"><span>Đang bảo trì</span><span class="stat-icon icon-orange">⚒</span></div><div class="stat-value">@Model.BaoTri</div><div class="stat-foot">Cần kiểm tra và xử lý</div></article>
+</section>
+<section class="dashboard-grid">
+    <div class="panel-card contracts-panel">
+        <div class="panel-heading"><div><h2>Hợp đồng sắp hết hạn</h2><p>Các hợp đồng kết thúc trong 30 ngày tới</p></div><a href="/HopDong" class="text-link">Tất cả hợp đồng <span>→</span></a></div>
+        @if (!Model.SapHetHan.Any())
+        { <div class="empty-state"><span class="empty-icon">✓</span><strong>Mọi thứ đang ổn!</strong><p>Không có hợp đồng nào sắp hết hạn.</p></div> }
+        else
+        {
+            <div class="table-responsive"><table class="table modern-table mb-0"><thead><tr><th>MÃ HỢP ĐỒNG</th><th>PHÒNG</th><th>NGƯỜI THUÊ</th><th>NGÀY KẾT THÚC</th></tr></thead><tbody>
+            @foreach (var h in Model.SapHetHan)
+            { <tr><td><a class="table-primary-link" asp-controller="HopDong" asp-action="Details" asp-route-id="@h.Id">@h.SoHopDong</a></td><td>@h.Phong.MaPhong</td><td>@h.NguoiThue.HoTen</td><td><span class="date-pill">@Fmt.Ngay(h.NgayKetThuc)</span></td></tr> }
+            </tbody></table></div>
+        }
+    </div>
+    <div class="panel-card invoice-panel">
+        <div class="panel-heading"><div><h2>Hóa đơn chưa thanh toán</h2><p>Theo dõi công nợ hiện tại</p></div><span class="stat-icon icon-orange">₫</span></div>
+        <div class="invoice-count">@Model.HoaDonChuaThanhToan <small>hóa đơn</small></div>
+        <div class="invoice-total-label">Tổng số tiền cần thu</div><div class="invoice-total">@Fmt.Vnd(Model.TongChuaThanhToan)</div>
+        <a class="btn btn-outline-primary invoice-button" href="/HoaDon?trangThai=chua">Xem hóa đơn chưa thanh toán <span>→</span></a>
+    </div>
+</section>

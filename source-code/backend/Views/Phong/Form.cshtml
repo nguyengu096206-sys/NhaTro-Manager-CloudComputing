@@ -1,0 +1,24 @@
+@model Phong
+@{ ViewData["Title"] = Model.Id == 0 ? "Thêm phòng" : "Sửa phòng"; }
+<h3 class="mb-3">@ViewData["Title"]</h3>
+<form method="post" class="card card-body" style="max-width:640px">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <div class="row">
+        <div class="col-md-6 mb-3"><label asp-for="MaPhong" class="form-label"></label><input asp-for="MaPhong" class="form-control" placeholder="P101" /><span asp-validation-for="MaPhong" class="text-danger"></span></div>
+        <div class="col-md-6 mb-3"><label asp-for="TenPhong" class="form-label"></label><input asp-for="TenPhong" class="form-control" /><span asp-validation-for="TenPhong" class="text-danger"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-3"><label asp-for="Tang" class="form-label"></label><input asp-for="Tang" type="number" min="0" max="50" class="form-control" /><span asp-validation-for="Tang" class="text-danger"></span></div>
+        <div class="col-md-8 mb-3"><label asp-for="LoaiPhongId" class="form-label"></label><select asp-for="LoaiPhongId" asp-items="(SelectList)ViewBag.LoaiPhongs" class="form-select"><option value="0">-- Chọn loại phòng --</option></select><span asp-validation-for="LoaiPhongId" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="TrangThai" class="form-label"></label>
+        <select asp-for="TrangThai" class="form-select">
+            @foreach (var t in TrangThaiPhong.All) { <option value="@t" selected="@(Model.TrangThai == t)">@t</option> }
+        </select>
+        <div class="form-text">Trạng thái "Đang thuê" do hệ thống đặt khi lập hợp đồng.</div>
+        <span asp-validation-for="TrangThai" class="text-danger"></span>
+    </div>
+    <div class="mb-3"><label asp-for="GhiChu" class="form-label"></label><textarea asp-for="GhiChu" rows="2" class="form-control"></textarea></div>
+    <div><button class="btn btn-primary" type="submit">Lưu</button> <a class="btn btn-secondary" asp-action="Index">Hủy</a></div>
+</form>

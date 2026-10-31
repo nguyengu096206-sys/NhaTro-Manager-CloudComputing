@@ -1,0 +1,37 @@
+@model HoaDon
+@{ ViewData["Title"] = "Lập hóa đơn"; var giaThue = (Dictionary<int, decimal>)ViewBag.GiaThue; }
+<h3 class="mb-3">Lập hóa đơn tháng</h3>
+<form method="post" class="card card-body" style="max-width:760px" id="frmHoaDon">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <div class="row">
+        <div class="col-md-8 mb-3"><label asp-for="HopDongId" class="form-label"></label><select asp-for="HopDongId" asp-items="(SelectList)ViewBag.HopDongs" class="form-select" id="hopDongId"><option value="0">-- Chọn hợp đồng đang hiệu lực --</option></select><span asp-validation-for="HopDongId" class="text-danger"></span></div>
+        <div class="col-md-4 mb-3"><label asp-for="Thang" class="form-label"></label><input asp-for="Thang" type="date" class="form-control" /><div class="form-text">Chọn ngày bất kỳ trong tháng.</div><span asp-validation-for="Thang" class="text-danger"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 mb-3"><label asp-for="ChiSoDienCu" class="form-label"></label><input asp-for="ChiSoDienCu" type="number" min="0" class="form-control calc" /><span asp-validation-for="ChiSoDienCu" class="text-danger"></span></div>
+        <div class="col-md-3 mb-3"><label asp-for="ChiSoDienMoi" class="form-label"></label><input asp-for="ChiSoDienMoi" type="number" min="0" class="form-control calc" /><span asp-validation-for="ChiSoDienMoi" class="text-danger"></span></div>
+        <div class="col-md-3 mb-3"><label asp-for="ChiSoNuocCu" class="form-label"></label><input asp-for="ChiSoNuocCu" type="number" min="0" class="form-control calc" /><span asp-validation-for="ChiSoNuocCu" class="text-danger"></span></div>
+        <div class="col-md-3 mb-3"><label asp-for="ChiSoNuocMoi" class="form-label"></label><input asp-for="ChiSoNuocMoi" type="number" min="0" class="form-control calc" /><span asp-validation-for="ChiSoNuocMoi" class="text-danger"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-3"><label asp-for="DonGiaDien" class="form-label"></label><input asp-for="DonGiaDien" type="number" min="0" class="form-control calc" /><span asp-validation-for="DonGiaDien" class="text-danger"></span></div>
+        <div class="col-md-4 mb-3"><label asp-for="DonGiaNuoc" class="form-label"></label><input asp-for="DonGiaNuoc" type="number" min="0" class="form-control calc" /><span asp-validation-for="DonGiaNuoc" class="text-danger"></span></div>
+        <div class="col-md-4 mb-3"><label asp-for="PhiDichVu" class="form-label"></label><input asp-for="PhiDichVu" type="number" min="0" class="form-control calc" /><span asp-validation-for="PhiDichVu" class="text-danger"></span></div>
+    </div>
+    <div class="alert alert-info">Tổng tiền dự kiến: <strong id="tongTien">0 đ</strong> <span class="text-muted">(tiền phòng + điện + nước + phí dịch vụ; hệ thống tính lại khi lưu)</span></div>
+    <div><button class="btn btn-primary" type="submit">Lưu hóa đơn</button> <a class="btn btn-secondary" asp-action="Index">Hủy</a></div>
+</form>
+@section Scripts {
+<script>
+    var giaThue = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(giaThue));
+    function tinh() {
+        var f = document.getElementById('frmHoaDon');
+        var v = function (n) { return parseFloat(f.elements[n].value) || 0; };
+        var phong = giaThue[document.getElementById('hopDongId').value] || 0;
+        var t = phong + (v('ChiSoDienMoi') - v('ChiSoDienCu')) * v('DonGiaDien') + (v('ChiSoNuocMoi') - v('ChiSoNuocCu')) * v('DonGiaNuoc') + v('PhiDichVu');
+        document.getElementById('tongTien').textContent = t.toLocaleString('vi-VN') + ' đ';
+    }
+    document.querySelectorAll('.calc, #hopDongId').forEach(function (e) { e.addEventListener('input', tinh); e.addEventListener('change', tinh); });
+    tinh();
+</script>
+}

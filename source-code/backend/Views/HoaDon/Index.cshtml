@@ -1,0 +1,39 @@
+@model List<HoaDon>
+@{ ViewData["Title"] = "Hóa đơn"; string tt = ViewBag.TrangThai; }
+<div class="d-flex justify-content-between align-items-center mb-3 page-heading"><div><div class="eyebrow">DOANH THU & CÔNG NỢ</div><h3 class="mb-0">Quản lý hóa đơn</h3><p class="page-subtitle">Tính tiền phòng, điện, nước và theo dõi tình trạng thu tiền hàng tháng.</p></div>
+    <a class="btn btn-primary" asp-action="Create">+ Lập hóa đơn</a>
+</div>
+<form method="get" class="row g-2 mb-3 filter-panel">
+    <div class="col-md-3"><input type="date" name="thang" value="@ViewBag.Thang" class="form-control" title="Chọn một ngày bất kỳ trong tháng cần xem" /></div>
+    <div class="col-md-3">
+        <select name="trangThai" class="form-select">
+            <option value="">Tất cả</option>
+            <option value="chua" selected="@(tt == "chua")">Chưa thanh toán</option>
+            <option value="da" selected="@(tt == "da")">Đã thanh toán</option>
+        </select>
+    </div>
+    <div class="col-md-6"><button class="btn btn-outline-primary" type="submit">Lọc</button> <a class="btn btn-outline-secondary" asp-action="Index">Xóa lọc</a></div>
+</form>
+<table class="table table-hover bg-white align-middle">
+    <thead><tr><th>Tháng</th><th>Phòng</th><th>Người thuê</th><th>Điện (kWh)</th><th>Nước (m³)</th><th>Tổng tiền</th><th>Trạng thái</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var d in Model)
+    {
+        <tr>
+            <td>@Fmt.Thang(d.Thang)</td>
+            <td><a asp-controller="HopDong" asp-action="Details" asp-route-id="@d.HopDongId">@d.HopDong.Phong.MaPhong</a></td>
+            <td>@d.HopDong.NguoiThue.HoTen</td>
+            <td>@(d.ChiSoDienMoi - d.ChiSoDienCu)</td><td>@(d.ChiSoNuocMoi - d.ChiSoNuocCu)</td>
+            <td>@Fmt.Vnd(d.TongTien)</td>
+            <td><span class="badge @(d.DaThanhToan ? "bg-success" : "bg-danger")">@(d.DaThanhToan ? "Đã thanh toán" : "Chưa thanh toán")</span></td>
+            <td class="text-end">
+                @if (!d.DaThanhToan)
+                {
+                    <form method="post" asp-action="ThanhToan" asp-route-id="@d.Id" class="d-inline"><button class="btn btn-sm btn-outline-success" type="submit">Đánh dấu đã thu</button></form>
+                }
+            </td>
+        </tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="8" class="text-center text-muted">Không có hóa đơn nào.</td></tr> }
+    </tbody>
+</table>

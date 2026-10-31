@@ -1,0 +1,11 @@
+@model TaiKhoanForm
+@{ ViewData["Title"] = "Tạo tài khoản"; }
+<h3 class="mb-3">Tạo tài khoản</h3>
+<form method="post" class="card card-body" style="max-width:560px">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <div class="mb-3"><label asp-for="TenDangNhap" class="form-label"></label><input asp-for="TenDangNhap" class="form-control" /><span asp-validation-for="TenDangNhap" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="HoTen" class="form-label"></label><input asp-for="HoTen" class="form-control" /><span asp-validation-for="HoTen" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="VaiTro" class="form-label"></label><select asp-for="VaiTro" class="form-select"><option value="Staff">Staff</option><option value="Administrator">Administrator</option></select><span asp-validation-for="VaiTro" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="MatKhau" class="form-label"></label><input asp-for="MatKhau" type="password" class="form-control" /><span asp-validation-for="MatKhau" class="text-danger"></span></div>
+    <div><button class="btn btn-primary" type="submit">Tạo</button> <a class="btn btn-secondary" asp-action="Index">Hủy</a></div>
+</form>

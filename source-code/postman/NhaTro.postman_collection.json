@@ -1,0 +1,735 @@
+{
+  "info": {
+    "name": "NhaTro Manager API",
+    "description": "Postman Collection cho hệ thống quản lý phòng trọ. Chạy Auth > Login trước (Postman tự giữ cookie phiên).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Mong đợi 200. Sai mật khẩu: 401.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenDangNhap\": \"admin\",\n  \"matKhau\": \"Admin@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Login (staff)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Dùng để thử 403 khi xóa.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenDangNhap\": \"staff\",\n  \"matKhau\": \"Staff@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Mong đợi 204."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phong",
+      "item": [
+        {
+          "name": "Danh sách / tìm kiếm",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/phong?keyword=P10&trangThai=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "phong"
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "P10"
+                },
+                {
+                  "key": "trangThai",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "200"
+          }
+        },
+        {
+          "name": "Chi tiết",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/phong/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "phong",
+                "1"
+              ]
+            },
+            "description": "200; id không tồn tại: 404"
+          }
+        },
+        {
+          "name": "Tạo phòng",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/phong",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "phong"
+              ]
+            },
+            "description": "201; trùng mã: 409; thiếu mã: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maPhong\": \"P301\",\n  \"tenPhong\": \"Phòng 301\",\n  \"tang\": 3,\n  \"loaiPhongId\": 1,\n  \"trangThai\": \"Trống\",\n  \"ghiChu\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cập nhật phòng",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/phong/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "phong",
+                "1"
+              ]
+            },
+            "description": "204",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maPhong\": \"P101\",\n  \"tenPhong\": \"Phòng 101 (sửa)\",\n  \"tang\": 1,\n  \"loaiPhongId\": 1,\n  \"trangThai\": \"Đang thuê\",\n  \"ghiChu\": \"Cập nhật qua API\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Xóa phòng (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/phong/10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "phong",
+                "10"
+              ]
+            },
+            "description": "204; Staff: 403; phòng đang thuê: 409"
+          }
+        }
+      ]
+    },
+    {
+      "name": "NguoiThue",
+      "item": [
+        {
+          "name": "Danh sách / tìm kiếm",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/nguoi-thue?keyword=An",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "nguoi-thue"
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "An"
+                }
+              ]
+            },
+            "description": "200"
+          }
+        },
+        {
+          "name": "Chi tiết",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/nguoi-thue/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "nguoi-thue",
+                "1"
+              ]
+            },
+            "description": "200"
+          }
+        },
+        {
+          "name": "Tạo người thuê",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/nguoi-thue",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "nguoi-thue"
+              ]
+            },
+            "description": "201; CCCD sai định dạng: 400; trùng CCCD: 409",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hoTen\": \"Hoàng Văn Phúc\",\n  \"cccd\": \"079201000099\",\n  \"soDienThoai\": \"0909000099\",\n  \"queQuan\": \"Cà Mau\",\n  \"email\": \"phuc@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cập nhật người thuê",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/nguoi-thue/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "nguoi-thue",
+                "5"
+              ]
+            },
+            "description": "204",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hoTen\": \"Võ Thị Em (sửa)\",\n  \"cccd\": \"079201000005\",\n  \"soDienThoai\": \"0901000005\",\n  \"queQuan\": \"Cà Mau\",\n  \"email\": \"phuc@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Xóa người thuê (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/nguoi-thue/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "nguoi-thue",
+                "5"
+              ]
+            },
+            "description": "204 hoặc 409"
+          }
+        }
+      ]
+    },
+    {
+      "name": "HopDong",
+      "item": [
+        {
+          "name": "Danh sách / tìm kiếm",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hop-dong?keyword=HD-2026",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hop-dong"
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "HD-2026"
+                }
+              ]
+            },
+            "description": "200"
+          }
+        },
+        {
+          "name": "Chi tiết",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hop-dong/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hop-dong",
+                "1"
+              ]
+            },
+            "description": "200"
+          }
+        },
+        {
+          "name": "Lập hợp đồng",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hop-dong",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hop-dong"
+              ]
+            },
+            "description": "201; phòng đã thuê: 409; ngày sai: 400. Đổi phongId thành phòng đang Trống (ví dụ 3 hoặc 4).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"soHopDong\": \"HD-2026-0100\",\n  \"phongId\": 3,\n  \"nguoiThueId\": 5,\n  \"ngayBatDau\": \"2026-11-01\",\n  \"ngayKetThuc\": \"2027-04-30\",\n  \"giaThue\": 1800000,\n  \"tienCoc\": 1800000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cập nhật hợp đồng",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hop-dong/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hop-dong",
+                "2"
+              ]
+            },
+            "description": "204",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"soHopDong\": \"HD-2026-0002\",\n  \"phongId\": 3,\n  \"nguoiThueId\": 5,\n  \"ngayBatDau\": \"2026-11-01\",\n  \"ngayKetThuc\": \"2027-06-30\",\n  \"giaThue\": 1800000,\n  \"tienCoc\": 1800000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Kết thúc hợp đồng",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hop-dong/4/ket-thuc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hop-dong",
+                "4",
+                "ket-thuc"
+              ]
+            },
+            "description": "204; đã kết thúc: 409"
+          }
+        }
+      ]
+    },
+    {
+      "name": "HoaDon",
+      "item": [
+        {
+          "name": "Danh sách",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hoa-don?daThanhToan=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hoa-don"
+              ],
+              "query": [
+                {
+                  "key": "daThanhToan",
+                  "value": "false"
+                }
+              ]
+            },
+            "description": "200"
+          }
+        },
+        {
+          "name": "Lập hóa đơn",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hoa-don",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hoa-don"
+              ]
+            },
+            "description": "201 (tổng tiền do server tính); chỉ số giảm: 400; trùng tháng: 409",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hopDongId\": 1,\n  \"thang\": \"2026-10-01\",\n  \"chiSoDienCu\": 180,\n  \"chiSoDienMoi\": 260,\n  \"chiSoNuocCu\": 16,\n  \"chiSoNuocMoi\": 22,\n  \"donGiaDien\": 3500,\n  \"donGiaNuoc\": 15000,\n  \"phiDichVu\": 100000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Đánh dấu đã thanh toán",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hoa-don/3/thanh-toan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hoa-don",
+                "3",
+                "thanh-toan"
+              ]
+            },
+            "description": "204"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tep",
+      "item": [
+        {
+          "name": "Upload ảnh/PDF cho phòng",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tep?loaiThucThe=Phong&thucTheId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tep"
+              ],
+              "query": [
+                {
+                  "key": "loaiThucThe",
+                  "value": "Phong"
+                },
+                {
+                  "key": "thucTheId",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Chọn tệp JPG/PNG/PDF ở trường file. 201; sai định dạng hoặc quá dung lượng: 400",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload PDF cho hợp đồng",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tep?loaiThucThe=HopDong&thucTheId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tep"
+              ],
+              "query": [
+                {
+                  "key": "loaiThucThe",
+                  "value": "HopDong"
+                },
+                {
+                  "key": "thucTheId",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "201",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Danh sách tệp",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tep?loaiThucThe=Phong&thucTheId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tep"
+              ],
+              "query": [
+                {
+                  "key": "loaiThucThe",
+                  "value": "Phong"
+                },
+                {
+                  "key": "thucTheId",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "200; lấy id tệp để tải xuống"
+          }
+        },
+        {
+          "name": "Tải xuống tệp",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tep/{{tepId}}/download",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tep",
+                "{{tepId}}",
+                "download"
+              ]
+            },
+            "description": "Thay {{tepId}} bằng id tệp. 200; không tìm thấy: 404"
+          }
+        },
+        {
+          "name": "Xóa tệp (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tep/{{tepId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tep",
+                "{{tepId}}"
+              ]
+            },
+            "description": "204"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+@model List<HopDong>
+@{ ViewData["Title"] = "Hợp đồng"; }
+<div class="d-flex justify-content-between align-items-center mb-3 page-heading"><div><div class="eyebrow">THUÊ & LƯU TRÚ</div><h3 class="mb-0">Quản lý hợp đồng</h3><p class="page-subtitle">Theo dõi thời hạn thuê, giá thuê, tiền cọc và trạng thái hợp đồng.</p></div>
+    <a class="btn btn-primary" asp-action="Create">+ Lập hợp đồng</a>
+</div>
+<form method="get" class="row g-2 mb-3 filter-panel">
+    <div class="col-md-6"><input name="keyword" value="@ViewBag.Keyword" class="form-control" placeholder="Tìm theo số hợp đồng, người thuê hoặc mã phòng..." /></div>
+    <div class="col-md-6"><button class="btn btn-outline-primary" type="submit">Tìm</button> <a class="btn btn-outline-secondary" asp-action="Index">Xóa lọc</a></div>
+</form>
+<table class="table table-hover bg-white align-middle">
+    <thead><tr><th>Số HĐ</th><th>Phòng</th><th>Người thuê</th><th>Thời hạn</th><th>Giá thuê</th><th>Trạng thái</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var h in Model)
+    {
+        <tr>
+            <td><a asp-action="Details" asp-route-id="@h.Id">@h.SoHopDong</a></td>
+            <td>@h.Phong.MaPhong</td><td>@h.NguoiThue.HoTen</td>
+            <td>@Fmt.Ngay(h.NgayBatDau) &ndash; @Fmt.Ngay(h.NgayKetThuc)</td>
+            <td>@Fmt.Vnd(h.GiaThue)</td>
+            <td><span class="badge @(h.TrangThai == "Hiệu lực" ? "bg-success" : "bg-secondary")">@h.TrangThai</span></td>
+            <td class="text-end"><a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@h.Id">Xem</a></td>
+        </tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="7" class="text-center text-muted">Không có hợp đồng nào.</td></tr> }
+    </tbody>
+</table>

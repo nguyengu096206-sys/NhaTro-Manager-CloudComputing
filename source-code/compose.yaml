@@ -1,0 +1,60 @@
+services:
+  application:
+    build: .
+    image: group05-nhatro-web:v1.0
+    container_name: nhatro-web
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__Default: "Host=database;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}"
+      Minio__Endpoint: "minio:9000"
+      Minio__AccessKey: ${MINIO_ROOT_USER}
+      Minio__SecretKey: ${MINIO_ROOT_PASSWORD}
+      Minio__Bucket: project-files
+    depends_on:
+      database:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    networks: [cloud-project-network]
+    restart: unless-stopped
+
+  database:
+    image: postgres:16-alpine
+    container_name: nhatro-db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [cloud-project-network]
+    restart: unless-stopped
+
+  minio:
+    image: cgr.dev/chainguard/minio:latest
+    container_name: nhatro-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    networks: [cloud-project-network]
+    restart: unless-stopped
+
+volumes:
+  database-data:
+  minio-data:
+
+networks:
+  cloud-project-network:
+    driver: bridge

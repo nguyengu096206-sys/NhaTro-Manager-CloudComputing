@@ -1,0 +1,20 @@
+@model HopDong
+@{ ViewData["Title"] = "Lập hợp đồng"; }
+<h3 class="mb-3">Lập hợp đồng thuê phòng</h3>
+<form method="post" class="card card-body" style="max-width:720px">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <div class="mb-3"><label asp-for="SoHopDong" class="form-label"></label><input asp-for="SoHopDong" class="form-control" placeholder="HD-2026-0005" /><span asp-validation-for="SoHopDong" class="text-danger"></span></div>
+    <div class="row">
+        <div class="col-md-6 mb-3"><label asp-for="PhongId" class="form-label"></label><select asp-for="PhongId" asp-items="(SelectList)ViewBag.Phongs" class="form-select"><option value="0">-- Chọn phòng trống --</option></select><span asp-validation-for="PhongId" class="text-danger"></span></div>
+        <div class="col-md-6 mb-3"><label asp-for="NguoiThueId" class="form-label"></label><select asp-for="NguoiThueId" asp-items="(SelectList)ViewBag.NguoiThues" class="form-select"><option value="0">-- Chọn người thuê --</option></select><span asp-validation-for="NguoiThueId" class="text-danger"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3"><label asp-for="NgayBatDau" class="form-label"></label><input asp-for="NgayBatDau" type="date" class="form-control" /><span asp-validation-for="NgayBatDau" class="text-danger"></span></div>
+        <div class="col-md-6 mb-3"><label asp-for="NgayKetThuc" class="form-label"></label><input asp-for="NgayKetThuc" type="date" class="form-control" /><span asp-validation-for="NgayKetThuc" class="text-danger"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3"><label asp-for="GiaThue" class="form-label"></label><input asp-for="GiaThue" type="number" min="0" step="1000" class="form-control" /><span asp-validation-for="GiaThue" class="text-danger"></span></div>
+        <div class="col-md-6 mb-3"><label asp-for="TienCoc" class="form-label"></label><input asp-for="TienCoc" type="number" min="0" step="1000" class="form-control" /><span asp-validation-for="TienCoc" class="text-danger"></span></div>
+    </div>
+    <div><button class="btn btn-primary" type="submit">Lập hợp đồng</button> <a class="btn btn-secondary" asp-action="Index">Hủy</a></div>
+</form>

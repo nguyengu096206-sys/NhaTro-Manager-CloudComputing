@@ -1,0 +1,12 @@
+ĐỒ ÁN CUỐI KỲ – CLOUD COMPUTING
+NHÓM 5 – NHA TRO MANAGER
+
+1. ẢNH MINH CHỨNG
+Thư mục screenshots chứa các hình ảnh minh chứng quá trình hoạt động của hệ thống, bao gồm:
+- Giao diện quản lý phòng trọ
+- Quản lý người thuê, hợp đồng và hóa đơn
+- Docker Compose
+- PostgreSQL
+- MinIO Object Storage
+
+.

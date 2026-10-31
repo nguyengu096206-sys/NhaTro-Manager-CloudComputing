@@ -1,0 +1,10 @@
+.env
+*.key
+service-account*.json
+node_modules/
+target/
+bin/
+obj/
+.vs/
+.idea/
+*.user

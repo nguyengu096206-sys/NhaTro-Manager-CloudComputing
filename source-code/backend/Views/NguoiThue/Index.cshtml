@@ -1,0 +1,28 @@
+@model List<NguoiThue>
+@{ ViewData["Title"] = "Người thuê"; var laAdmin = User.IsInRole("Administrator"); }
+<div class="d-flex justify-content-between align-items-center mb-3 page-heading"><div><div class="eyebrow">HỒ SƠ CƯ DÂN</div><h3 class="mb-0">Quản lý người thuê</h3><p class="page-subtitle">Lưu thông tin liên hệ và giấy tờ của người đang hoặc đã thuê phòng.</p></div>
+    <a class="btn btn-primary" asp-action="Create">+ Thêm người thuê</a>
+</div>
+<form method="get" class="row g-2 mb-3 filter-panel">
+    <div class="col-md-6"><input name="keyword" value="@ViewBag.Keyword" class="form-control" placeholder="Tìm theo họ tên, CCCD hoặc số điện thoại..." /></div>
+    <div class="col-md-6"><button class="btn btn-outline-primary" type="submit">Tìm</button> <a class="btn btn-outline-secondary" asp-action="Index">Xóa lọc</a></div>
+</form>
+<table class="table table-hover bg-white align-middle">
+    <thead><tr><th>Họ và tên</th><th>CCCD</th><th>Số điện thoại</th><th>Quê quán</th><th>Email</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var n in Model)
+    {
+        <tr>
+            <td>@n.HoTen</td><td>@n.Cccd</td><td>@n.SoDienThoai</td><td>@n.QueQuan</td><td>@n.Email</td>
+            <td class="text-end text-nowrap">
+                <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@n.Id">Sửa</a>
+                @if (laAdmin)
+                {
+                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDelete" data-action="@Url.Action("Delete", "NguoiThue", new { id = n.Id })" data-name="@n.HoTen">Xóa</button>
+                }
+            </td>
+        </tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="6" class="text-center text-muted">Không có người thuê nào.</td></tr> }
+    </tbody>
+</table>

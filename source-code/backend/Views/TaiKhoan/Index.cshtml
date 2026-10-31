@@ -1,0 +1,25 @@
+@model List<NguoiDung>
+@{ ViewData["Title"] = "Tài khoản"; }
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Tài khoản người dùng</h3>
+    <a class="btn btn-primary" asp-action="Create">+ Tạo tài khoản</a>
+</div>
+<table class="table table-hover bg-white align-middle">
+    <thead><tr><th>Tên đăng nhập</th><th>Họ tên</th><th>Vai trò</th><th>Trạng thái</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td>@u.TenDangNhap</td><td>@u.HoTen</td><td>@u.VaiTro</td>
+            <td><span class="badge @(u.DangHoatDong ? "bg-success" : "bg-secondary")">@(u.DangHoatDong ? "Hoạt động" : "Đã khóa")</span></td>
+            <td class="text-end">
+                <form method="post" asp-action="DoiTrangThai" asp-route-id="@u.Id" class="d-inline"><button class="btn btn-sm btn-outline-warning" type="submit">@(u.DangHoatDong ? "Khóa" : "Mở khóa")</button></form>
+                <form method="post" asp-action="DatLaiMatKhau" asp-route-id="@u.Id" class="d-inline-flex gap-1 ms-1">
+                    <input name="matKhau" type="password" class="form-control form-control-sm" style="width:150px" placeholder="Mật khẩu mới" minlength="6" required />
+                    <button class="btn btn-sm btn-outline-primary" type="submit">Đặt lại</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

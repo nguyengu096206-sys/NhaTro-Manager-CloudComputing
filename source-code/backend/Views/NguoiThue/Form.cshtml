@@ -1,0 +1,14 @@
+@model NguoiThue
+@{ ViewData["Title"] = Model.Id == 0 ? "Thêm người thuê" : "Sửa người thuê"; }
+<h3 class="mb-3">@ViewData["Title"]</h3>
+<form method="post" class="card card-body" style="max-width:640px">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <div class="mb-3"><label asp-for="HoTen" class="form-label"></label><input asp-for="HoTen" class="form-control" /><span asp-validation-for="HoTen" class="text-danger"></span></div>
+    <div class="row">
+        <div class="col-md-6 mb-3"><label asp-for="Cccd" class="form-label"></label><input asp-for="Cccd" class="form-control" maxlength="12" /><span asp-validation-for="Cccd" class="text-danger"></span></div>
+        <div class="col-md-6 mb-3"><label asp-for="SoDienThoai" class="form-label"></label><input asp-for="SoDienThoai" class="form-control" maxlength="11" /><span asp-validation-for="SoDienThoai" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3"><label asp-for="QueQuan" class="form-label"></label><input asp-for="QueQuan" class="form-control" /><span asp-validation-for="QueQuan" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="Email" class="form-label"></label><input asp-for="Email" type="email" class="form-control" /><span asp-validation-for="Email" class="text-danger"></span></div>
+    <div><button class="btn btn-primary" type="submit">Lưu</button> <a class="btn btn-secondary" asp-action="Index">Hủy</a></div>
+</form>

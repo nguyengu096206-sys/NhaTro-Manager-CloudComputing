@@ -1,0 +1,53 @@
+@model TepVm
+@{
+    var laAdmin = User.IsInRole("Administrator");
+}
+<div class="card mb-3">
+    <div class="card-header fw-semibold">Tệp đính kèm</div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" asp-controller="Tep" asp-action="Upload" class="row g-2 mb-3">
+            <input type="hidden" name="loaiThucThe" value="@Model.LoaiThucThe" />
+            <input type="hidden" name="thucTheId" value="@Model.ThucTheId" />
+            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+            <div class="col-md-8"><input type="file" name="file" class="form-control" accept=".jpg,.jpeg,.png,.pdf" required /></div>
+            <div class="col-md-4"><button type="submit" class="btn btn-primary">Tải lên</button></div>
+            <div class="form-text">Ảnh JPG, PNG tối đa 5 MB; PDF tối đa 10 MB. Tệp được lưu trong MinIO.</div>
+        </form>
+        @if (!Model.Teps.Any())
+        {
+            <p class="text-muted mb-0">Chưa có tệp nào.</p>
+        }
+        else
+        {
+            <div class="row g-3">
+                @foreach (var t in Model.Teps)
+                {
+                    <div class="col-md-4 col-lg-3">
+                        <div class="card h-100">
+                            @if (t.LoaiTep.StartsWith("image/"))
+                            {
+                                <a href="@Url.Action("Download", "Tep", new { id = t.Id, inline = true })" target="_blank"><img class="card-img-top tep-thumb" alt="@t.TenGoc" src="@Url.Action("Download", "Tep", new { id = t.Id, inline = true })" /></a>
+                            }
+                            else
+                            {
+                                <div class="tep-thumb d-flex align-items-center justify-content-center bg-light fw-bold text-secondary">PDF</div>
+                            }
+                            <div class="card-body p-2 small">
+                                <div class="text-truncate" title="@t.TenGoc">@t.TenGoc</div>
+                                <div class="text-muted">@Fmt.Dung(t.DungLuong) &middot; @t.ThoiDiemUpload.ToString("dd/MM/yyyy HH:mm")</div>
+                                <div class="mt-2 d-flex gap-1">
+                                    <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Download", "Tep", new { id = t.Id, inline = true })" target="_blank">Xem</a>
+                                    <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Download", "Tep", new { id = t.Id })">Tải xuống</a>
+                                    @if (laAdmin)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDelete" data-action="@Url.Action("Delete", "Tep", new { id = t.Id, returnUrl = Model.ReturnUrl })" data-name="@t.TenGoc">Xóa</button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

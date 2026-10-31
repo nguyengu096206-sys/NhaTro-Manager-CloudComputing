@@ -1,0 +1,69 @@
+@model HopDongDetailsVm
+@{ ViewData["Title"] = "Hợp đồng " + Model.HopDong.SoHopDong; var h = Model.HopDong; var hieuLuc = h.TrangThai == "Hiệu lực"; }
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Hợp đồng @h.SoHopDong <span class="badge @(hieuLuc ? "bg-success" : "bg-secondary") fs-6">@h.TrangThai</span></h3>
+    <div class="d-flex gap-2">
+        @if (hieuLuc)
+        {
+            <a class="btn btn-outline-primary" asp-controller="HoaDon" asp-action="Create" asp-route-hopDongId="@h.Id">Lập hóa đơn</a>
+            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmEnd">Kết thúc hợp đồng</button>
+        }
+        <a class="btn btn-secondary" asp-action="Index">Quay lại</a>
+    </div>
+</div>
+<div class="card mb-3">
+    <div class="card-header fw-semibold">Thông tin hợp đồng</div>
+    <div class="card-body row">
+        <div class="col-md-6">
+            <p class="mb-1">Phòng: <a asp-controller="Phong" asp-action="Details" asp-route-id="@h.PhongId">@h.Phong.MaPhong &ndash; @h.Phong.TenPhong</a></p>
+            <p class="mb-1">Người thuê: <strong>@h.NguoiThue.HoTen</strong></p>
+            <p class="mb-1">CCCD: @h.NguoiThue.Cccd &middot; SĐT: @h.NguoiThue.SoDienThoai</p>
+        </div>
+        <div class="col-md-6">
+            <p class="mb-1">Thời hạn: @Fmt.Ngay(h.NgayBatDau) &ndash; @Fmt.Ngay(h.NgayKetThuc)</p>
+            <p class="mb-1">Giá thuê: <strong>@Fmt.Vnd(h.GiaThue)</strong>/tháng</p>
+            <p class="mb-1">Tiền cọc: @Fmt.Vnd(h.TienCoc)</p>
+        </div>
+    </div>
+</div>
+<div class="card mb-3">
+    <div class="card-header fw-semibold">Hóa đơn của hợp đồng</div>
+    <div class="card-body p-0">
+        <table class="table mb-0">
+            <thead><tr><th>Tháng</th><th>Tổng tiền</th><th>Trạng thái</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var d in Model.HoaDons)
+            {
+                <tr>
+                    <td>@Fmt.Thang(d.Thang)</td><td>@Fmt.Vnd(d.TongTien)</td>
+                    <td><span class="badge @(d.DaThanhToan ? "bg-success" : "bg-danger")">@(d.DaThanhToan ? "Đã thanh toán" : "Chưa thanh toán")</span></td>
+                    <td class="text-end">
+                        @if (!d.DaThanhToan)
+                        {
+                            <form method="post" asp-controller="HoaDon" asp-action="ThanhToan" asp-route-id="@d.Id" class="d-inline">
+                                <input type="hidden" name="returnUrl" value="@Model.Tep.ReturnUrl" />
+                                <button class="btn btn-sm btn-outline-success" type="submit">Đánh dấu đã thu</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            @if (!Model.HoaDons.Any()) { <tr><td colspan="4" class="text-center text-muted">Chưa có hóa đơn.</td></tr> }
+            </tbody>
+        </table>
+    </div>
+</div>
+<partial name="_Tep" model="Model.Tep" />
+
+@if (hieuLuc)
+{
+    <div class="modal fade" id="confirmEnd" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" asp-action="KetThuc" asp-route-id="@h.Id" class="modal-content">
+                <div class="modal-header"><h5 class="modal-title">Kết thúc hợp đồng</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button></div>
+                <div class="modal-body">Kết thúc hợp đồng <strong>@h.SoHopDong</strong>? Phòng @h.Phong.MaPhong sẽ chuyển về trạng thái Trống.</div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button type="submit" class="btn btn-danger">Kết thúc</button></div>
+            </form>
+        </div>
+    </div>
+}
